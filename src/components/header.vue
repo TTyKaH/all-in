@@ -29,6 +29,7 @@ export default {};
     nav {
       display: flex;
       gap: 5px;
+      font-weight: 600;
     }
   }
 }

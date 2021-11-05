@@ -86,11 +86,17 @@ input {
 .btn {
   padding: 5px 20px;
   background-color: #679ed2;
+  text-align: center;
   text-transform: uppercase;
   font-size: 20px;
   border: none;
   border-radius: 3px;
   transition: background-color 0.1s ease-in;
+
+  &-small {
+    padding: 0 5px;
+    font-size: 18px;
+  }
 
   &:hover {
     background-color: #408ad2;
@@ -99,9 +105,23 @@ input {
 
 .table {
   display: grid;
+  gap: 15px;
 
-  .table-head {
+  &-head {
     display: grid;
+    align-items: center;
+    gap: 5px;
+  }
+
+  &-body {
+    display: grid;
+    gap: 10px;
+
+    .table-row {
+      display: grid;
+      align-items: center;
+      gap: 10px;
+    }
   }
 }
 
@@ -113,6 +133,14 @@ input {
 
 .grid {
   display: grid;
+}
+
+.grid-12 {
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.grid-24 {
+  grid-template-columns: repeat(24, 1fr);
 }
 
 // grid cols span
@@ -163,4 +191,51 @@ input {
 
 .span-12 {
   grid-column: span 12;
+}
+
+.span-13 {
+  grid-column: span 13;
+}
+
+.span-14 {
+  grid-column: span 14;
+}
+
+.span-15 {
+  grid-column: span 15;
+}
+.span-16 {
+  grid-column: span 16;
+}
+
+.span-17 {
+  grid-column: span 17;
+}
+
+.span-18 {
+  grid-column: span 18;
+}
+
+.span-19 {
+  grid-column: span 19;
+}
+
+.span-20 {
+  grid-column: span 20;
+}
+
+.span-21 {
+  grid-column: span 21;
+}
+
+.span-22 {
+  grid-column: span 22;
+}
+
+.span-23 {
+  grid-column: span 23;
+}
+
+.span-24 {
+  grid-column: span 24;
 }
