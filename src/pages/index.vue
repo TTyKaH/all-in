@@ -3,7 +3,6 @@
     <div class="wrap wrap-py">
       <h1 class="other-font">All-in</h1>
       <p class="cta">Choose the game!</p>
-      <div class="wrap"></div>
       <div class="line"></div>
       <div class="games">
         <router-link to="/uno" class="btn">Uno</router-link>
