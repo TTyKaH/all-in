@@ -38,9 +38,13 @@ a {
 
 input {
   border-radius: 3px;
-  border: none;
-  padding-left: 10px;
+  border: 3px solid transparent;
+  padding: 3px 10px;
   color: #2f2f2f;
+}
+
+.error {
+  border: 3px solid #ff0000;
 }
 
 .wrap {
@@ -94,7 +98,7 @@ input {
   transition: background-color 0.1s ease-in;
 
   &-small {
-    padding: 0 5px;
+    padding: 5px;
     font-size: 18px;
   }
 
@@ -141,6 +145,10 @@ input {
 
 .grid-24 {
   grid-template-columns: repeat(24, 1fr);
+}
+
+.self-center {
+  justify-self: center;
 }
 
 // grid cols span
