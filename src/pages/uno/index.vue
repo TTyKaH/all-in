@@ -11,7 +11,12 @@
           v-model="newLimitScore"
         />
         <button class="btn btn-small" @click="add()">Add</button>
-        <input type="text" placeholder="player name" v-model="newPlayer" />
+        <input
+          id="newPlayer"
+          type="text"
+          placeholder="player name"
+          v-model="newPlayer"
+        />
       </div>
       <div class="line line-mt"></div>
     </div>
@@ -29,20 +34,31 @@
             :key="idx"
             class="table-row grid-24"
           >
-            <div class="span-9">{{ player.name }}</div>
+            <div class="span-9" :class="{ error: idx === this.loser }">
+              {{ player.name }}
+            </div>
             <div class="span-4">{{ player.score }}</div>
             <input
               type="text"
               class="span-7"
               v-model="players[idx].scorePerRound"
             />
-            <div class="span-4 btn btn-small" @click="plus(idx)">+</div>
+            <div class="span-4 btn btn-small" @click="sum(idx)">+</div>
           </div>
         </div>
+      </div>
+      <div class="sum-all grid grid-24">
+        <div class="span-20"></div>
+        <div class="span-4 btn btn-small" @click="sumAll()">Σ+</div>
       </div>
       <div class="endgameScore">
         <div>Endgame Score:</div>
         <div>{{ limitScore }}</div>
+      </div>
+      <div class="roundsCount grid grid-12">
+        <button class="span-5 btn btn-small" @click="prev()">prev round</button>
+        <div class="span-2">{{ round }}</div>
+        <button class="span-5 btn btn-small" @click="next()">next round</button>
       </div>
       <div class="line line-mt"></div>
     </div>
@@ -68,24 +84,74 @@ export default {
       players: [
         {
           name: "Vitaly",
-          score: 100,
-          scorePerRound: 0,
+          score: 400,
+          scorePerRound: "",
           roundsResults: [],
         },
         {
           name: "Sergey",
           score: 100,
-          scorePerRound: 0,
+          scorePerRound: "",
           roundsResults: [],
         },
         {
           name: "Michail",
           score: 100,
-          scorePerRound: 0,
+          scorePerRound: "",
+          roundsResults: [],
+        },
+        {
+          name: "David",
+          score: 100,
+          scorePerRound: "",
+          roundsResults: [],
+        },
+        {
+          name: "Lera",
+          score: 100,
+          scorePerRound: "",
           roundsResults: [],
         },
       ],
+      round: 1,
+      loser: "",
     };
+  },
+  // created() {
+  //   for (let i = 0; i < this.players.length; i++) {
+  //     if (this.players[i].score >= 500) {
+  //       console.log("Limit reached!");
+  //       return (this.loser = i);
+  //     }
+  //   }
+  // },
+  // computed: {
+  //   loser() {
+  //     let idx = "";
+  //     for (let i = 0; i < this.players.length; i++) {
+  //       if (this.players[i].score >= 500) {
+  //         idx = i;
+  //         return;
+  //       }
+  //     }
+  //     console.log("idx: ", idx);
+  //     return idx;
+  //   },
+
+  // },
+  watch: {
+    loser(newValue) {
+      console.log(`Loser is ${this.loser}td gamer!`);
+      this.loser = newValue;
+    },
+  },
+  mounted() {
+    for (let i = 0; i < this.players.length; i++) {
+      if (this.players[i].score >= 500) {
+        console.log("Limit reached!");
+        return (this.loser = i);
+      }
+    }
   },
   methods: {
     set() {
@@ -98,18 +164,41 @@ export default {
       return element.classList.add("error");
     },
     add() {
-      this.players.push({
-        name: this.newPlayer,
-        score: 0,
-        scorePerRound: 0,
-        // возможно нужен счетчик раундов, чтобы кто-то контролировал раунды (это на
-        // случай, если за один раунд игроку будет проводится несколько операций суммирования)
-        roundsResults: [],
-      });
+      let element = document.getElementById("newPlayer");
+      if (this.newPlayer.length <= 12) {
+        element.classList.remove("error");
+        this.players.push({
+          name: this.newPlayer,
+          score: 0,
+          scorePerRound: "",
+          roundsResults: [],
+        });
+      }
+      return element.classList.add("error");
     },
-    plus(idx) {
-      this.players[idx].score =
-        this.players[idx].score + Number(this.players[idx].scorePerRound);
+    sum(idx) {
+      if (typeof Number(this.players[idx].scorePerRound) == "number") {
+        this.players[idx].score =
+          this.players[idx].score + Number(this.players[idx].scorePerRound);
+        this.players[idx].scorePerRound = "";
+      }
+    },
+    sumAll() {
+      for (let i = 0; i < this.players.length; i++) {
+        if (typeof Number(this.players[i].scorePerRound) === "number") {
+          this.players[i].score =
+            this.players[i].score + Number(this.players[i].scorePerRound);
+          this.players[i].scorePerRound = "";
+        }
+      }
+    },
+    prev() {
+      if (this.round > 1) {
+        this.round--;
+      }
+    },
+    next() {
+      this.round++;
     },
   },
 };
@@ -128,10 +217,24 @@ export default {
     gap: 15px 10px;
   }
 
+  .sum-all {
+    margin-top: 10px;
+    gap: 10px;
+  }
+
   .endgameScore {
     display: flex;
     justify-content: space-between;
-    margin-top: 15px;
+    margin: 15px 0;
+  }
+
+  .roundsCount {
+    gap: 10px;
+
+    > div {
+      text-align: center;
+      border-radius: 3px;
+    }
   }
 }
 </style>
