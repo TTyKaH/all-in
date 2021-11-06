@@ -39,7 +39,7 @@ a {
 input {
   border-radius: 3px;
   border: 3px solid transparent;
-  padding: 3px 10px;
+  padding: 0 10px;
   color: #2f2f2f;
 }
 
@@ -98,7 +98,7 @@ input {
   transition: background-color 0.1s ease-in;
 
   &-small {
-    padding: 5px;
+    padding: 3px;
     font-size: 18px;
   }
 
