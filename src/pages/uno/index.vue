@@ -20,7 +20,7 @@
       </div>
       <div class="line line-mt"></div>
     </div>
-    <div class="wrap wrap-pt">
+    <div v-if="players" class="wrap wrap-pt">
       <div class="table">
         <div class="table-head grid-24">
           <div class="span-9">Player Name</div>
@@ -60,13 +60,13 @@
         <div class="span-2">{{ round }}</div>
         <button class="span-5 btn btn-small" @click="next()">next round</button>
       </div>
-      <div class="line line-mt"></div>
     </div>
-    <div class="wrap wrap-py">
+    <div class="wrap wrap-pb">
+      <div class="line line-my"></div>
       <div class="chart">
         <div class="horizontal-line"></div>
         <div class="column">
-          <div class="player-name"></div>
+          <div class="player-name">5</div>
           <div class="score-line"></div>
         </div>
       </div>
@@ -148,7 +148,10 @@ export default {
       return element.classList.add("error");
     },
     sum(idx) {
-      if (typeof Number(this.players[idx].scorePerRound) == "number") {
+      if (
+        typeof Number(this.players[idx].scorePerRound) == "number" &&
+        typeof this.players[idx].scorePerRound !== "string"
+      ) {
         this.players[idx].score =
           this.players[idx].score + Number(this.players[idx].scorePerRound);
         this.players[idx].scorePerRound = "";
@@ -156,7 +159,10 @@ export default {
     },
     sumAll() {
       for (let i = 0; i < this.players.length; i++) {
-        if (typeof Number(this.players[i].scorePerRound) === "number") {
+        if (
+          typeof Number(this.players[i].scorePerRound) === "number" &&
+          typeof this.players[i].scorePerRound !== "string"
+        ) {
           this.players[i].score =
             this.players[i].score + Number(this.players[i].scorePerRound);
           this.players[i].scorePerRound = "";
