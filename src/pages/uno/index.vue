@@ -34,7 +34,7 @@
             :key="idx"
             class="table-row grid-24"
           >
-            <div class="span-9" :class="{ error: idx === this.loser }">
+            <div class="span-9" :class="{ error: player.score >= 500 }">
               {{ player.name }}
             </div>
             <div class="span-4">{{ player.score }}</div>
@@ -114,36 +114,7 @@ export default {
         },
       ],
       round: 1,
-      loser: "",
     };
-  },
-  // created() {
-  //   for (let i = 0; i < this.players.length; i++) {
-  //     if (this.players[i].score >= 500) {
-  //       console.log("Limit reached!");
-  //       return (this.loser = i);
-  //     }
-  //   }
-  // },
-  // computed: {
-  //   loser() {
-  //     let idx = "";
-  //     for (let i = 0; i < this.players.length; i++) {
-  //       if (this.players[i].score >= 500) {
-  //         idx = i;
-  //         return;
-  //       }
-  //     }
-  //     console.log("idx: ", idx);
-  //     return idx;
-  //   },
-
-  // },
-  watch: {
-    loser(newValue) {
-      console.log(`Loser is ${this.loser}td gamer!`);
-      this.loser = newValue;
-    },
   },
   mounted() {
     for (let i = 0; i < this.players.length; i++) {
