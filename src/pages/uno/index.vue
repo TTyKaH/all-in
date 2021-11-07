@@ -114,7 +114,21 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-small" @click="clear()">Clear Game</button>
+        <div v-if="!players.length" class="note">
+          Here you will see you score!
+        </div>
+        <div v-else class="grid">
+          <div class="roundsCount grid grid-12">
+            <button class="span-5 btn btn-small" @click="prev()">
+              prev round
+            </button>
+            <div class="span-2">{{ round }}</div>
+            <button class="span-5 btn btn-small" @click="next()">
+              next round
+            </button>
+          </div>
+          <button class="btn btn-small" @click="clear()">Clear Game</button>
+        </div>
       </div>
     </section>
   </div>
@@ -239,10 +253,6 @@ export default {
   }
 
   #action-field {
-    .note {
-      text-align: center;
-    }
-
     .sum-all {
       margin-top: 10px;
       gap: 10px;
@@ -253,22 +263,9 @@ export default {
       justify-content: space-between;
       margin: 15px 0;
     }
-
-    .roundsCount {
-      gap: 10px;
-
-      > div {
-        text-align: center;
-        border-radius: 3px;
-      }
-    }
   }
 
   #statistic {
-    .wrap {
-      display: grid;
-    }
-
     .chart {
       p {
         text-transform: uppercase;
@@ -314,11 +311,15 @@ export default {
         }
       }
     }
+  }
 
-    .btn {
-      padding-left: 15px;
-      padding-right: 15px;
-      margin: 10px auto;
+  .roundsCount {
+    gap: 10px;
+    margin-bottom: 15px;
+
+    > div {
+      text-align: center;
+      border-radius: 3px;
     }
   }
 }
