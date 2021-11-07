@@ -3,6 +3,8 @@
     <section id="settings-field">
       <div class="wrap wrap-pt">
         <h2 class="font-fruktur">Uno</h2>
+        <!-- TODO: сделать настройки не видимыми по нажатию ко=нопки старт
+        но добавить кнопку "настройки", на случай необхордимости добавить игрока -->
         <div class="settings">
           <button class="btn btn-small" @click="set()">Set</button>
           <input
@@ -109,8 +111,10 @@
               <div
                 class="score-line"
                 :class="{ 'loser-bg': player.score > limitScore }"
-                :style="{ width: culcWidth(idx) }"
-              />
+              >
+                <div :style="{ width: player.preRoundsPercent }"></div>
+                <div :style="{ width: player.lastRoundPercent }"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -139,39 +143,49 @@ export default {
   data() {
     return {
       newLimitScore: "",
-      limitScore: 500,
+      limitScore: 100,
       newPlayer: "",
       players: [
         {
           name: "Vitaly",
-          score: 550,
-          scorePerRound: "",
-          roundsResults: [60, 34, 124],
-        },
-        {
-          name: "Sergey",
-          score: 375,
+          score: 0,
           scorePerRound: "",
           roundsResults: [],
+          preRoundsPercent: "",
+          lastRoundPercent: "",
         },
-        {
-          name: "Michail",
-          score: 250,
-          scorePerRound: "",
-          roundsResults: [],
-        },
-        {
-          name: "David",
-          score: 125,
-          scorePerRound: "",
-          roundsResults: [],
-        },
-        {
-          name: "Lera",
-          score: 150,
-          scorePerRound: "",
-          roundsResults: [],
-        },
+        // {
+        //   name: "Sergey",
+        //   score: 0,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        //   preRoundsPercent: "15%",
+        //   lastRoundPercent: "30%",
+        // },
+        // {
+        //   name: "Michail",
+        //   score: 0,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        //   preRoundsPercent: "25%",
+        //   lastRoundPercent: "10%",
+        // },
+        // {
+        //   name: "David",
+        //   score: 0,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        //   preRoundsPercent: "10%",
+        //   lastRoundPercent: "35%",
+        // },
+        // {
+        //   name: "Lera",
+        //   score: 0,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        //   preRoundsPercent: "30%",
+        //   lastRoundPercent: "15%",
+        // },
       ],
       round: 1,
     };
@@ -195,6 +209,8 @@ export default {
           score: 0,
           scorePerRound: "",
           roundsResults: [],
+          preRoundsPercent: "",
+          lastRoundPercent: "",
         });
         return;
       }
@@ -204,6 +220,16 @@ export default {
       if (isNaN(this.players[idx].scorePerRound) === false) {
         this.players[idx].score =
           this.players[idx].score + +this.players[idx].scorePerRound;
+
+        if (isNaN(this.players[idx].roundsResults[this.round - 1])) {
+          this.players[idx].roundsResults[this.round - 1] = 0;
+        }
+        this.players[idx].roundsResults[this.round - 1] =
+          this.players[idx].roundsResults[this.round - 1] +
+          +this.players[idx].scorePerRound;
+
+        this.culcWidth(idx);
+
         this.players[idx].scorePerRound = "";
       }
     },
@@ -212,6 +238,16 @@ export default {
         if (isNaN(this.players[i].scorePerRound) === false) {
           this.players[i].score =
             this.players[i].score + Number(this.players[i].scorePerRound);
+
+          if (isNaN(this.players[i].roundsResults[this.round - 1])) {
+            this.players[i].roundsResults[this.round - 1] = 0;
+          }
+          this.players[i].roundsResults[this.round - 1] =
+            this.players[i].roundsResults[this.round - 1] +
+            +this.players[i].scorePerRound;
+
+          this.culcWidth(i);
+
           this.players[i].scorePerRound = "";
         }
       }
@@ -225,10 +261,21 @@ export default {
       this.round++;
     },
     culcWidth(idx) {
-      if (this.players[idx].score >= 500) {
-        return "100%";
+      // TODO: описать функции через переменные
+      // TODO: не учитывается переключение раундов (логику надо усложнить и добавить
+      // вызов функции в prev и next)
+      this.players[idx].preRoundsPercent =
+        ((this.players[idx].score -
+          this.players[idx].roundsResults[this.round - 1]) /
+          this.limitScore) *
+          100 +
+        "%";
+      if (this.round !== 1) {
+        this.players[idx].lastRoundPercent =
+          (this.players[idx].roundsResults[this.round - 1] / this.limitScore) *
+            100 +
+          "%";
       }
-      return (this.players[idx].score / this.limitScore) * 100 + "%";
     },
     clear() {
       this.players = [];
@@ -305,8 +352,15 @@ export default {
           }
 
           .score-line {
-            height: 20px;
-            background-color: #408ad2;
+            display: flex;
+            > div {
+              height: 20px;
+              background-color: #408ad2;
+
+              &:last-child {
+                background-color: #63aaf1;
+              }
+            }
           }
         }
       }
