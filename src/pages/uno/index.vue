@@ -1,25 +1,27 @@
 <template>
   <div class="uno">
-    <div class="wrap wrap-pt">
-      <h2 class="other-font">Uno</h2>
-      <div class="settings">
-        <button class="btn btn-small" @click="set()">Set</button>
-        <input
-          id="newLimitScore"
-          type="text"
-          placeholder="endgame score (500 st.)"
-          v-model="newLimitScore"
-        />
-        <button class="btn btn-small" @click="add()">Add</button>
-        <input
-          id="newPlayer"
-          type="text"
-          placeholder="player name"
-          v-model="newPlayer"
-        />
+    <section>
+      <div class="wrap wrap-pt">
+        <h2 class="font-fruktur">Uno</h2>
+        <div class="settings">
+          <button class="btn btn-small" @click="set()">Set</button>
+          <input
+            id="newLimitScore"
+            type="text"
+            placeholder="endgame score (500 st.)"
+            v-model="newLimitScore"
+          />
+          <button class="btn btn-small" @click="add()">Add</button>
+          <input
+            id="newPlayer"
+            type="text"
+            placeholder="player name"
+            v-model="newPlayer"
+          />
+        </div>
+        <div class="line line-mt"></div>
       </div>
-      <div class="line line-mt"></div>
-    </div>
+    </section>
     <div v-if="players" class="wrap wrap-pt">
       <div class="table">
         <div class="table-head grid-24">
@@ -34,7 +36,7 @@
             :key="idx"
             class="table-row grid-24"
           >
-            <div class="span-9" :class="{ error: player.score >= 500 }">
+            <div class="span-9" :class="{ loser: player.score >= 500 }">
               {{ player.name }}
             </div>
             <div class="span-4">{{ player.score }}</div>
@@ -64,10 +66,36 @@
     <div class="wrap wrap-pb">
       <div class="line line-my"></div>
       <div class="chart">
-        <div class="horizontal-line"></div>
-        <div class="column">
-          <div class="player-name">5</div>
-          <div class="score-line"></div>
+        <p>bar graph</p>
+        <div class="axis">
+          <div class="axis-points grid grid-24">
+            <div class="span-4">0</div>
+            <div class="span-4 self-center">
+              {{ Math.floor(limitScore / 4) }}
+            </div>
+            <div class="span-8 self-center">
+              {{ Math.floor(limitScore / 2) }}
+            </div>
+            <div class="span-4 self-center">
+              {{ Math.floor(limitScore * 0.75) }}
+            </div>
+            <div class="span-4 self-end">{{ limitScore }}</div>
+          </div>
+          <div class="axis-line grid grid-24">
+            <div class="span-6"></div>
+            <div class="span-6"></div>
+            <div class="span-6"></div>
+            <div class="span-6"></div>
+          </div>
+        </div>
+        <div class="lines">
+          <div v-for="(player, idx) in players" :key="idx" class="score">
+            <div class="player-name">
+              <span>{{ player.name }}:</span>
+              <span>{{ player.score }}</span>
+            </div>
+            <div class="score-line" :style="{ width: culcWidth(idx) }" />
+          </div>
         </div>
       </div>
     </div>
@@ -82,47 +110,39 @@ export default {
       limitScore: 500,
       newPlayer: "",
       players: [
-        {
-          name: "Vitaly",
-          score: 400,
-          scorePerRound: "",
-          roundsResults: [],
-        },
-        {
-          name: "Sergey",
-          score: 100,
-          scorePerRound: "",
-          roundsResults: [],
-        },
-        {
-          name: "Michail",
-          score: 100,
-          scorePerRound: "",
-          roundsResults: [],
-        },
-        {
-          name: "David",
-          score: 100,
-          scorePerRound: "",
-          roundsResults: [],
-        },
-        {
-          name: "Lera",
-          score: 100,
-          scorePerRound: "",
-          roundsResults: [],
-        },
+        // {
+        //   name: "Vitaly",
+        //   score: 450,
+        //   scorePerRound: "",
+        //   roundsResults: [60, 34, 124],
+        // },
+        // {
+        //   name: "Sergey",
+        //   score: 375,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        // },
+        // {
+        //   name: "Michail",
+        //   score: 250,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        // },
+        // {
+        //   name: "David",
+        //   score: 125,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        // },
+        // {
+        //   name: "Lera",
+        //   score: 150,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        // },
       ],
       round: 1,
     };
-  },
-  mounted() {
-    for (let i = 0; i < this.players.length; i++) {
-      if (this.players[i].score >= 500) {
-        console.log("Limit reached!");
-        return (this.loser = i);
-      }
-    }
   },
   methods: {
     set() {
@@ -144,25 +164,20 @@ export default {
           scorePerRound: "",
           roundsResults: [],
         });
+        return;
       }
       return element.classList.add("error");
     },
     sum(idx) {
-      if (
-        typeof Number(this.players[idx].scorePerRound) == "number" &&
-        typeof this.players[idx].scorePerRound !== "string"
-      ) {
+      if (isNaN(this.players[idx].scorePerRound) === false) {
         this.players[idx].score =
-          this.players[idx].score + Number(this.players[idx].scorePerRound);
+          this.players[idx].score + +this.players[idx].scorePerRound;
         this.players[idx].scorePerRound = "";
       }
     },
     sumAll() {
       for (let i = 0; i < this.players.length; i++) {
-        if (
-          typeof Number(this.players[i].scorePerRound) === "number" &&
-          typeof this.players[i].scorePerRound !== "string"
-        ) {
+        if (isNaN(this.players[i].scorePerRound) === false) {
           this.players[i].score =
             this.players[i].score + Number(this.players[i].scorePerRound);
           this.players[i].scorePerRound = "";
@@ -176,6 +191,12 @@ export default {
     },
     next() {
       this.round++;
+    },
+    culcWidth(idx) {
+      if (this.players[idx].score >= 500) {
+        return "100%";
+      }
+      return (this.players[idx].score / this.limitScore) * 100 + "%";
     },
   },
 };
@@ -211,6 +232,52 @@ export default {
     > div {
       text-align: center;
       border-radius: 3px;
+    }
+  }
+
+  .chart {
+    p {
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .axis {
+      .axis-line {
+        > div {
+          border: #fff solid 2px;
+          border-top: 0;
+          border-left: 0;
+          width: 100%;
+          height: 5px;
+
+          &:first-child {
+            border: #fff solid 2px;
+            border-top: 0;
+          }
+        }
+      }
+    }
+
+    .lines {
+      display: grid;
+      grid-template-rows: auto;
+      gap: 10px;
+      margin: 15px 0;
+
+      .score {
+        width: 100%;
+
+        .player-name {
+          display: flex;
+          gap: 10px;
+        }
+
+        .score-line {
+          height: 20px;
+          background-color: #408ad2;
+        }
+      }
     }
   }
 }

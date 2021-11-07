@@ -44,7 +44,11 @@ input {
 }
 
 .error {
-  border: 3px solid #ff0000;
+  border: 3px solid #ff4646;
+}
+
+.loser {
+  color: #ff4646;
 }
 
 .wrap {
@@ -67,7 +71,7 @@ input {
   }
 }
 
-.other-font {
+.font-fruktur {
   font-family: "Fruktur", cursive;
 }
 
@@ -137,14 +141,22 @@ input {
 
 .grid {
   display: grid;
-}
 
-.grid-12 {
-  grid-template-columns: repeat(12, 1fr);
-}
+  &-12 {
+    grid-template-columns: repeat(12, 1fr);
+  }
 
-.grid-24 {
-  grid-template-columns: repeat(24, 1fr);
+  &-24 {
+    grid-template-columns: repeat(24, 1fr);
+  }
+
+  .self-end {
+    justify-self: end;
+  }
+
+  .self-center {
+    justify-self: center;
+  }
 }
 
 .self-center {
