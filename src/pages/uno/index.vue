@@ -135,6 +135,15 @@
         </div>
       </div>
     </section>
+    <section id="feedback">
+      <div class="wrap wrap-pb">
+        <div class="line line-mb"></div>
+        <div class="feedback">
+          <p>For feedback:</p>
+          <p>some@some.com</p>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -146,41 +155,41 @@ export default {
       limitScore: 500,
       newPlayer: "",
       players: [
-        // {
-        //   name: "Vitaly",
-        //   score: 0,
-        //   scorePerRound: "",
-        //   roundsResults: [],
-        //   lineWidth: "",
-        // },
-        // {
-        //   name: "Sergey",
-        //   score: 0,
-        //   scorePerRound: "",
-        //   roundsResults: [],
-        //   lineWidth: "",
-        // },
-        // {
-        //   name: "Michail",
-        //   score: 0,
-        //   scorePerRound: "",
-        //   roundsResults: [],
-        //   lineWidth: "",
-        // },
-        // {
-        //   name: "David",
-        //   score: 0,
-        //   scorePerRound: "",
-        //   roundsResults: [],
-        //   lineWidth: "",
-        // },
-        // {
-        //   name: "Lera",
-        //   score: 0,
-        //   scorePerRound: "",
-        //   roundsResults: [],
-        //   lineWidth: "",
-        // },
+        {
+          name: "Vitaly",
+          score: 0,
+          scorePerRound: "",
+          roundsResults: [],
+          lineWidth: "",
+        },
+        {
+          name: "Sergey",
+          score: 0,
+          scorePerRound: "",
+          roundsResults: [],
+          lineWidth: "",
+        },
+        {
+          name: "Michail",
+          score: 0,
+          scorePerRound: "",
+          roundsResults: [],
+          lineWidth: "",
+        },
+        {
+          name: "David",
+          score: 0,
+          scorePerRound: "",
+          roundsResults: [],
+          lineWidth: "",
+        },
+        {
+          name: "Lera",
+          score: 0,
+          scorePerRound: "",
+          roundsResults: [],
+          lineWidth: "",
+        },
       ],
       round: 1,
       lastRound: "",
@@ -402,6 +411,13 @@ export default {
     > div {
       text-align: center;
       border-radius: 3px;
+    }
+  }
+
+  #feedback {
+    .feedback {
+      display: flex;
+      justify-content: space-between;
     }
   }
 }
