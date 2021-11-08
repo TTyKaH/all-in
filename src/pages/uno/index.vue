@@ -106,12 +106,14 @@
             <div v-for="(player, idx) in players" :key="idx" class="score">
               <div class="player-name">
                 <span>{{ player.name }}:</span>
-                <span>{{ player.score }}</span>
+                <span>{{ culcScoreAtChoosenRound(idx) }}</span>
               </div>
               <div
                 class="score-line"
-                :class="{ 'loser-bg': player.score >= limitScore }"
-                :style="{ width: culcWidth(idx) }"
+                :class="{
+                  'loser-bg': culcScoreAtChoosenRound(idx) >= limitScore,
+                }"
+                :style="{ width: player.lineWidth }"
               />
             </div>
           </div>
@@ -146,45 +148,56 @@ export default {
       players: [
         {
           name: "Vitaly",
-          score: 100,
+          score: 0,
           scorePerRound: "",
           roundsResults: [],
+          lineWidth: "",
         },
         {
           name: "Sergey",
-          score: 175,
+          score: 0,
           scorePerRound: "",
           roundsResults: [],
+          lineWidth: "",
         },
         {
           name: "Michail",
-          score: 230,
+          score: 0,
           scorePerRound: "",
           roundsResults: [],
+          lineWidth: "",
         },
         {
           name: "David",
-          score: 75,
+          score: 0,
           scorePerRound: "",
           roundsResults: [],
+          lineWidth: "",
         },
         {
           name: "Lera",
-          score: 125,
+          score: 0,
           scorePerRound: "",
           roundsResults: [],
+          lineWidth: "",
         },
       ],
       round: 1,
+      lastRound: "",
     };
+  },
+  created() {
+    this.culcWidth();
   },
   methods: {
     set() {
       // Сделать всплывающее окно с небольшими пояснениями по ограничениям и правилам
       let element = document.getElementById("newLimitScore");
-      if (this.newLimitScore >= 300 && this.newLimitScore < 1000) {
+      if (this.newLimitScore >= 300 && this.newLimitScore <= 1000) {
         element.classList.remove("error");
-        return (this.limitScore = this.newLimitScore);
+        this.limitScore = this.newLimitScore;
+        this.culcWidth();
+        return (this.newLimitScore = "");
       }
       return element.classList.add("error");
     },
@@ -197,7 +210,10 @@ export default {
           score: 0,
           scorePerRound: "",
           roundsResults: [],
+          lineWidth: "",
         });
+        this.newPlayer = "";
+        console.log(this.players[0]);
         return;
       }
       return element.classList.add("error");
@@ -206,39 +222,97 @@ export default {
       if (isNaN(this.players[idx].scorePerRound) === false) {
         this.players[idx].score =
           this.players[idx].score + +this.players[idx].scorePerRound;
-        this.culcWidth(idx);
+
+        if (isNaN(this.players[idx].roundsResults[this.round - 1])) {
+          this.players[idx].roundsResults[this.round - 1] = 0;
+        }
+        this.players[idx].roundsResults[this.round - 1] =
+          this.players[idx].roundsResults[this.round - 1] +
+          +this.players[idx].scorePerRound;
+
+        this.checkLosers(idx);
+
         this.players[idx].scorePerRound = "";
       }
+      this.culcWidth();
     },
     sumAll() {
       for (let i = 0; i < this.players.length; i++) {
         if (isNaN(this.players[i].scorePerRound) === false) {
           this.players[i].score =
             this.players[i].score + Number(this.players[i].scorePerRound);
-          this.culcWidth(i);
+
+          if (isNaN(this.players[i].roundsResults[this.round - 1])) {
+            this.players[i].roundsResults[this.round - 1] = 0;
+          }
+          this.players[i].roundsResults[this.round - 1] =
+            this.players[i].roundsResults[this.round - 1] +
+            +this.players[i].scorePerRound;
+
+          this.checkLosers(i);
+
           this.players[i].scorePerRound = "";
         }
       }
+      this.culcWidth();
     },
     prev() {
       if (this.round > 1) {
         this.round--;
+        this.culcWidth();
       }
     },
     next() {
-      this.round++;
-    },
-    culcWidth(idx) {
-      // TODO: описать функции через переменные
-      // TODO: не учитывается переключение раундов (логику надо усложнить и добавить
-      // вызов функции в prev и next)
-      if (this.players[idx].score >= 500) {
-        return "100%";
+      if (this.round !== this.lastRound) {
+        this.round++;
+        this.culcWidth();
       }
-      return (this.players[idx].score / this.limitScore) * 100 + "%";
+    },
+    checkLosers(idx) {
+      if (this.players[idx].score >= this.limitScore) {
+        this.lastRound = this.round;
+      }
+    },
+    culcWidth() {
+      // описать функции через переменные
+      if (this.players.length === 0) return;
+      for (let i = 0; i < this.players.length; i++) {
+        let scoreAtChosenRound = 0;
+        // подсчет числителя
+        for (let j = 0; j < this.round; j++) {
+          if (isNaN(this.players[i].roundsResults[j])) {
+            this.players[i].roundsResults[j] = 0;
+          }
+          scoreAtChosenRound =
+            scoreAtChosenRound + this.players[i].roundsResults[j];
+        }
+        // расчет процентажа
+        if (scoreAtChosenRound <= this.limitScore) {
+          console.log(
+            `player ${i} -`,
+            (scoreAtChosenRound / this.limitScore) * 100 + "%"
+          );
+          this.players[i].lineWidth =
+            (scoreAtChosenRound / this.limitScore) * 100 + "%";
+        } else {
+          this.players[i].lineWidth = "100%";
+        }
+      }
+    },
+    culcScoreAtChoosenRound(idx) {
+      // сделать функцию контекстной, цикл применять по факту
+      let scoreAtChosenRound = 0;
+      for (let i = 0; i < this.round; i++) {
+        if (typeof this.players[idx].roundsResults[i] === "number") {
+          scoreAtChosenRound =
+            scoreAtChosenRound + this.players[idx].roundsResults[i];
+        }
+      }
+      return scoreAtChosenRound;
     },
     clear() {
       this.players = [];
+      this.lastRound = "";
     },
   },
 };
