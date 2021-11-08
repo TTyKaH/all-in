@@ -146,41 +146,41 @@ export default {
       limitScore: 500,
       newPlayer: "",
       players: [
-        {
-          name: "Vitaly",
-          score: 0,
-          scorePerRound: "",
-          roundsResults: [],
-          lineWidth: "",
-        },
-        {
-          name: "Sergey",
-          score: 0,
-          scorePerRound: "",
-          roundsResults: [],
-          lineWidth: "",
-        },
-        {
-          name: "Michail",
-          score: 0,
-          scorePerRound: "",
-          roundsResults: [],
-          lineWidth: "",
-        },
-        {
-          name: "David",
-          score: 0,
-          scorePerRound: "",
-          roundsResults: [],
-          lineWidth: "",
-        },
-        {
-          name: "Lera",
-          score: 0,
-          scorePerRound: "",
-          roundsResults: [],
-          lineWidth: "",
-        },
+        // {
+        //   name: "Vitaly",
+        //   score: 0,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        //   lineWidth: "",
+        // },
+        // {
+        //   name: "Sergey",
+        //   score: 0,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        //   lineWidth: "",
+        // },
+        // {
+        //   name: "Michail",
+        //   score: 0,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        //   lineWidth: "",
+        // },
+        // {
+        //   name: "David",
+        //   score: 0,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        //   lineWidth: "",
+        // },
+        // {
+        //   name: "Lera",
+        //   score: 0,
+        //   scorePerRound: "",
+        //   roundsResults: [],
+        //   lineWidth: "",
+        // },
       ],
       round: 1,
       lastRound: "",
@@ -213,7 +213,7 @@ export default {
           lineWidth: "",
         });
         this.newPlayer = "";
-        console.log(this.players[0]);
+        this.culcWidth();
         return;
       }
       return element.classList.add("error");
