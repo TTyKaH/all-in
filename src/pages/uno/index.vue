@@ -311,6 +311,7 @@ export default {
       return scoreAtChosenRound;
     },
     clear() {
+      this.round = 1;
       this.players = [];
       this.lastRound = "";
     },
